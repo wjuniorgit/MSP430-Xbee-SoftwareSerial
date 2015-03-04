@@ -74,8 +74,8 @@ void XbeeS1::txPacket64(Xbee64addr addr, const char *payload) {
 		//START DELIMITER
 		xbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		xbeeSendByte((((3 + payloadsize + 8) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 8) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x00, true);
 		txChecksum += 0x00;
@@ -140,8 +140,8 @@ void XbeeS1::ATCommand(const char first_char, const char second_char) {
 		//START DELIMITER
 		xbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		xbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize ) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x08, true);
 		txChecksum += 0x08;
@@ -174,8 +174,8 @@ void XbeeS1::ATCommand(const char first_char, const char second_char, const char
 		//START DELIMITER
 		xbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		xbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize ) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x08, true);
 		txChecksum += 0x08;
@@ -216,8 +216,8 @@ void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char 
 		//START DELIMITER
 		xbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		xbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x17, true);
 		txChecksum += 0x17;
@@ -267,9 +267,12 @@ void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char 
 		byte = first_char;
 		xbeeSendByte(byte, true);
 		txChecksum += byte;
+
 		byte = second_char;
 		xbeeSendByte(byte, true);
 		txChecksum += byte;
+
+
 		txChecksum = 0xff - txChecksum;
 		//CHECKSUM
 		xbeeSendByte(txChecksum, true);
@@ -289,8 +292,8 @@ void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char 
 		//START DELIMITER
 		xbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		xbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x17, true);
 		txChecksum += 0x17;

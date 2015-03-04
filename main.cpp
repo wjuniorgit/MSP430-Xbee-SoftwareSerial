@@ -59,6 +59,9 @@ int main(void) {
 	char rxPacket;
 	PacketInfo txPacket;
 
+	Xbee64addr adr64(0x00,0x13,0xA2,0x00,0x40,0x92,0xBA,0xEF);
+
+
 	startT = false;
 	int packNumCounter = 0;
 	int packTxCounter = 0;
@@ -93,8 +96,9 @@ int main(void) {
 
 
 			//xbee.txPacket(adr, teste, 150, strlen(teste));
-			xbee.txPacket(adr, teste);
-
+			//xbee.txPacket(adr, teste);
+			//xbee.txPacket64(adr64, "teste");
+			xbee.remoteATCommand(adr64,'I','D');
 			packTxCounter++;
 
 			quaterMsElapsed(100);
