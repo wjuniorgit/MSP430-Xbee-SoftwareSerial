@@ -1,0 +1,1 @@
+"./timer.obj" "./softUart.obj" "./pins.obj" "./main.obj" "./XbeeS1.obj" "./TxFrame.obj" "./PacketInfo.obj" "../lnk_msp430g2553.cmd" -l"libc.a" 
