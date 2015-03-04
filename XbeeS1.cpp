@@ -144,7 +144,7 @@ void XbeeS1::ATCommand(const char first_char, const char second_char) {
 		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x08, true);
-		txChecksum += 0x01;
+		txChecksum += 0x08;
 		//FRAME ID
 		xbeeSendByte(0x01, true);
 		txChecksum += 0x01;
@@ -178,7 +178,7 @@ void XbeeS1::ATCommand(const char first_char, const char second_char, const char
 		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
 		//API IDENTIFIER
 		xbeeSendByte(0x08, true);
-		txChecksum += 0x01;
+		txChecksum += 0x08;
 		//FRAME ID
 		xbeeSendByte(0x01, true);
 		txChecksum += 0x01;
@@ -196,6 +196,161 @@ void XbeeS1::ATCommand(const char first_char, const char second_char, const char
 			txChecksum += byte;
 			++parameter;
 		}
+
+		txChecksum = 0xff - txChecksum;
+		//CHECKSUM
+		xbeeSendByte(txChecksum, true);
+		quaterMsElapsed(400);
+	}
+	txOk = false;
+}
+
+void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char second_char) {
+
+	int payloadsize = 2;
+
+		while (!txOk ) {
+
+		unsigned char byte = 0;
+		txChecksum = 0x0;
+		//START DELIMITER
+		xbeeSendByte(START_BYTE, false);
+		//LENGTH
+		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		//API IDENTIFIER
+		xbeeSendByte(0x17, true);
+		txChecksum += 0x17;
+		//FRAME ID
+		xbeeSendByte(0x01, true);
+		txChecksum += 0x01;
+
+		//64 DESTINATION ADRESS
+		byte = addr.get_addr_sb(1);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(2);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+	    byte = addr.get_addr_sb(3);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+	    byte = addr.get_addr_sb(4);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(5);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(6);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(7);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(8);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		//16DESTINATION ADRESS
+		byte = 0xFF;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte =0xFE;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		//OPTIONS
+		xbeeSendByte(0x00, true);
+		txChecksum += 0x00;
+
+		//AT COMMAND
+		byte = first_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = second_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		txChecksum = 0xff - txChecksum;
+		//CHECKSUM
+		xbeeSendByte(txChecksum, true);
+		quaterMsElapsed(400);
+	}
+	txOk = false;
+}
+
+void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char second_char, const char* parameter) {
+
+	int payloadsize = strlen(parameter) + 2;
+
+		while (!txOk ) {
+
+		unsigned char byte = 0;
+		txChecksum = 0x0;
+		//START DELIMITER
+		xbeeSendByte(START_BYTE, false);
+		//LENGTH
+		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		//API IDENTIFIER
+		xbeeSendByte(0x17, true);
+		txChecksum += 0x17;
+		//FRAME ID
+		xbeeSendByte(0x01, true);
+		txChecksum += 0x01;
+
+		//64 DESTINATION ADRESS
+		byte = addr.get_addr_sb(1);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(2);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+	    byte = addr.get_addr_sb(3);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+	    byte = addr.get_addr_sb(4);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(5);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(6);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(7);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = addr.get_addr_sb(8);
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		//16DESTINATION ADRESS
+		byte = 0xFF;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte =0xFE;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		//OPTIONS
+		xbeeSendByte(0x00, true);
+		txChecksum += 0x00;
+
+		//AT COMMAND
+		byte = first_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = second_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		while (*parameter) {
+			byte = ((unsigned char) *parameter);
+			xbeeSendByte(byte, true);
+			txChecksum += byte;
+			++parameter;
+		}
+
 
 		txChecksum = 0xff - txChecksum;
 		//CHECKSUM

@@ -29,8 +29,8 @@ public:
 	void txPacket64(Xbee64addr addr, const char *payload);
 	void ATCommand(const char first_char, const char second_char);
 	void ATCommand(const char first_char, const char second_char, const char* parameter);
-	void RemoteATCommand(Xbee64addr addr, const char first_char, const char second_char);
-    void RemoteATCommand(Xbee64addr addr, const char first_char, const char second_char, const char* parameter);
+	void remoteATCommand(Xbee64addr addr, const char first_char, const char second_char);
+    void remoteATCommand(Xbee64addr addr, const char first_char, const char second_char, const char* parameter);
 
 	//void txPacket(Xbee16addr, PacketInfo, int);
 
