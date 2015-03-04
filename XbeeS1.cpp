@@ -109,7 +109,6 @@ void XbeeS1::txPacket64(Xbee64addr addr, const char *payload) {
 		txChecksum += byte;
 
 
-
 		//OPTIONS
 		xbeeSendByte(0x00, true);
 		txChecksum += 0x00;
@@ -130,6 +129,81 @@ void XbeeS1::txPacket64(Xbee64addr addr, const char *payload) {
 	txOk = false;
 }
 
+void XbeeS1::ATCommand(const char first_char, const char second_char) {
+
+	int payloadsize = 2;
+
+		while (!txOk ) {
+
+		unsigned char byte = 0;
+		txChecksum = 0x0;
+		//START DELIMITER
+		xbeeSendByte(START_BYTE, false);
+		//LENGTH
+		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		//API IDENTIFIER
+		xbeeSendByte(0x08, true);
+		txChecksum += 0x01;
+		//FRAME ID
+		xbeeSendByte(0x01, true);
+		txChecksum += 0x01;
+		//AT COMMAND
+		byte = first_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = second_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		txChecksum = 0xff - txChecksum;
+		//CHECKSUM
+		xbeeSendByte(txChecksum, true);
+		quaterMsElapsed(400);
+	}
+	txOk = false;
+}
+
+void XbeeS1::ATCommand(const char first_char, const char second_char, const char* parameter) {
+
+	int payloadsize = strlen(parameter) + 2;
+
+		while (!txOk ) {
+
+		unsigned char byte = 0;
+		txChecksum = 0x0;
+		//START DELIMITER
+		xbeeSendByte(START_BYTE, false);
+		//LENGTH
+		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
+		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		//API IDENTIFIER
+		xbeeSendByte(0x08, true);
+		txChecksum += 0x01;
+		//FRAME ID
+		xbeeSendByte(0x01, true);
+		txChecksum += 0x01;
+		//AT COMMAND
+		byte = first_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+		byte = second_char;
+		xbeeSendByte(byte, true);
+		txChecksum += byte;
+
+		while (*parameter) {
+			byte = ((unsigned char) *parameter);
+			xbeeSendByte(byte, true);
+			txChecksum += byte;
+			++parameter;
+		}
+
+		txChecksum = 0xff - txChecksum;
+		//CHECKSUM
+		xbeeSendByte(txChecksum, true);
+		quaterMsElapsed(400);
+	}
+	txOk = false;
+}
 
 void XbeeS1::txPacket(Xbee16addr addr, const char *payload) {
 
