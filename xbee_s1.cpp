@@ -452,14 +452,13 @@ void XbeeS1::GetRXPacket() {
 
 	if (buffer_char == START_BYTE) {
 
-
 		rx_checksum_ = 0x0;
 		data_index_ = 0;
 		message_size_ = 0;
 		msb_ = 0;
 		lsb_ = 0;
+
 	}
-	if(data_index_ >1){
 
 		if (data_index_ == 1) {
 			msb_ = buffer_char;
@@ -495,7 +494,7 @@ void XbeeS1::GetRXPacket() {
 
 
 	data_index_++;
-	}
+
 }
 }
 
