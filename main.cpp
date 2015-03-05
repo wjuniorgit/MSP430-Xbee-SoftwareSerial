@@ -3,7 +3,6 @@
 #include "timer.h"
 #include "pins.h"
 #include "XbeeS1.h"
-#include "PacketInfo.h"
 
 #define BUTTON BIT3
 
@@ -42,165 +41,49 @@ int main(void) {
 	_BIS_SR(GIE);                            // Enable CPU interrupts
 
 
-	char msbAddr;
-	char lsbAddr;
-	char thisLsbAddr;
+	Xbee16Addr adr(0x00,0x01);
 
 
+	Xbee64Addr adr64(0x00,0x13,0xA2,0x00,0x40,0x92,0xBA,0xEF);
 
-	//Nodo solo - 5 - exp1
-	msbAddr = 0x00;
-	lsbAddr = 0x01;
-	thisLsbAddr = 0x05;
-
-	Xbee16addr adr(msbAddr,lsbAddr);
-	//adr.msb = msbAddr;
-	//adr.lsb = lsbAddr;
-	char rxPacket;
-	PacketInfo txPacket;
-
-	Xbee64addr adr64(0x00,0x13,0xA2,0x00,0x40,0x92,0xBA,0xEF);
-
-
-	startT = false;
-	int packNumCounter = 0;
-	int packTxCounter = 0;
-	int sec = 0;
-	int ms = 0;
-	int j = 0;
-	value = 0x45;
+	unsigned char counter=0;
 
 	while (1) {
 
 		// TXNODE EX1
 
-		if (startT && packTxCounter < 100) {
-			ms = getMs();
-			sec = getSec();
-
-			txPacket.secMsb = sec >> 8;
-			txPacket.secLsb = sec & 0xff;
-			txPacket.packNum = packNumCounter;
-			txPacket.oriAddr = thisLsbAddr;
-			txPacket.msMsb = ms >> 8;
-			txPacket.msLsb = ms & 0xff;
-
-			char* stringa = "teste";
-			char teste[4];
-			teste[0]=0x45;
-			teste[1]=0x67;
-			teste[2]=0x65;
-			teste[3]=0x67;
-			teste[4]=0x22;
-
+		if (startT && counter < 1) {
 
 
 			//xbee.txPacket(adr, teste, 150, strlen(teste));
 			//xbee.txPacket(adr, teste);
-			//xbee.txPacket64(adr64, "teste");
-			xbee.remoteATCommand(adr64,'I','D');
-			packTxCounter++;
+			xbee.TxRequest64(adr64, "teste");
+			//xbee.TxRemoteATCommand(adr64,'C','H');
 
+			counter++;
 			quaterMsElapsed(100);
 
 			//RED_LED_TOGGLE();
+		}else{
+			startT = false;
+			counter = 0;
 		}
 
-		while (!xbee.isEmpty()) {
-			RED_LED_TOGGLE();
-			rxPacket = xbee.getPacket();
-			RED_LED_TOGGLE();
 
+		while (!xbee.IsEmpty()) {
+			//RED_LED_TOGGLE();
+			//rxPacket = xbee.get_packet();
+			//RED_LED_TOGGLE();
 		}
 
 		//ENDTXNODE
 
 
-
-
-
-		/*
-		 // TXNODE EX2
-		 if (startT && packTxCounter < 100) {
-		 ms = getMs();
-		 sec = getSec();
-		 txPacket.secMsb = sec >> 8;
-		 txPacket.secLsb = sec & 0xff;
-		 txPacket.packNum = packNumCounter;
-		 txPacket.oriAddr = thisLsbAddr;
-		 txPacket.msMsb = ms >> 8;
-		 txPacket.msLsb = ms & 0xff;
-		 xbee.txPacket(adr, txPacket, 150);
-		 packTxCounter++;
-		 quaterMsElapsed(400);
-		 RED_LED_TOGGLE();
-		 }
-
-		 if (!xbee.isEmpty()) {
-		 rxPacket = xbee.getPacket();
-		 if (rxPacket.secLsb == 0xFF && rxPacket.secMsb == 0xFF) {
-
-		 if (thisLsbAddr == 0x02) {
-		 quaterMsElapsed(400);
-		 }
-		 if (thisLsbAddr == 0x03) {
-		 quaterMsElapsed(700);
-		 }
-		 if (thisLsbAddr == 0x04) {
-		 quaterMsElapsed(1000);
-		 }
-		 if (thisLsbAddr == 0x05) {
-		 quaterMsElapsed(1300);
-
-		 }
-
-		 startTest();
-		 } else {
-		 rxPacket = xbee.getPacket();
-		 txPacket.secMsb = rxPacket.secMsb;
-		 txPacket.secLsb = rxPacket.secLsb;
-		 txPacket.packNum = rxPacket.packNum;
-		 txPacket.oriAddr = rxPacket.oriAddr;
-		 txPacket.msMsb = rxPacket.msMsb;
-		 txPacket.msLsb = rxPacket.msLsb;
-		 xbee.txPacket(adr, txPacket, 150);
-		 quaterMsElapsed(400);
-		 RED_LED_TOGGLE();
-		 }
-		 }
-		 */
-		//ENDTXNODE
-
-
-
-
-
-		/*
-		 //UAV NODE
-		 while (!xbee.isEmpty()) {
-		 rxPacket = xbee.getPacket();
-
-
-		 packNumCounter++;
-		 // xbee.txPacket(adr,rxPacket,1000);
-		 RED_LED_TOGGLE();
-		 }
-
-		 	*/
-		//secondsElapsed(1);
 		if (btnpress == 1) {
 
-			RED_LED_TOGGLE();
+			//RED_LED_TOGGLE();
 			startTest();
 
-
-			for (j = 0; j < packNumCounter; j++) {
-
-			//for (j = 0; j < packNumCounter * 9; j++) {
-
-			//	hu.xmit();
-
-			}
 
 			secondsElapsed(1);
 			btnpress = 0;

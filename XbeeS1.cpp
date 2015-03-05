@@ -7,43 +7,37 @@
 
 #include "XbeeS1.h"
 
-PacketInfo XbeeS1::packet;
-softUart XbeeS1::su;
-volatile char XbeeS1::dataIndex;
-volatile bool XbeeS1::isEscaped;
-volatile uint8_t XbeeS1::rxChecksum;
-volatile uint8_t XbeeS1::txChecksum;
-int XbeeS1::msgsize;
-volatile char XbeeS1::msb;
-volatile char XbeeS1::lsb;
-unsigned char XbeeS1::rxApiFrame;
-unsigned char XbeeS1::txStatus;
-//char XbeeS1::recievedMessage_[MAXMSGSIZE];
-bool XbeeS1::txOk;
-//ringbuffer<PacketInfo,8> XbeeS1::packetBuffer;
-//ringbuffer<PacketInfo,2> XbeeS1::packetBuffer;
-ringbuffer<char,16> XbeeS1::packetBuffer;
+softUart XbeeS1::software_serial_;
+volatile char XbeeS1::data_index_;
+volatile bool XbeeS1::is_escaped_;
+volatile uint8_t XbeeS1::rx_checksum_;
+volatile uint8_t XbeeS1::tx_checksum_;
+int XbeeS1::message_size_;
+volatile char XbeeS1::msb_;
+volatile char XbeeS1::lsb_;
+unsigned char XbeeS1::rx_api_frame_;
+unsigned char XbeeS1::tx_status_;
+bool XbeeS1::tx_ok_;
+ringbuffer<char,16> XbeeS1::packet_buffer_;
 
 
 XbeeS1::XbeeS1() {
-
 	//TA0CCTL0 = CCIE;
 	TA0CCR0 = 60;
 	TA0CCTL0 = CCIE;
 	TA0CTL = TASSEL_2 + MC_2 + ID_0;
 
-	dataIndex = 0;
-	isEscaped = false;
-	rxChecksum = 0x0;
-	txChecksum = 0x0;
-	msgsize = 255;
-	msb = 0;
-	lsb = 0;
-	txOk = false;
-	rxApiFrame = 0x0;
-	txStatus = 0x0;
+	data_index_ = 0;
+	is_escaped_ = false;
+	rx_checksum_ = 0x0;
+	tx_checksum_ = 0x0;
+	message_size_ = 255;
+	msb_ = 0;
+	lsb_ = 0;
+	tx_ok_ = false;
+	rx_api_frame_ = 0x0;
+	tx_status_ = 0x0;
 	// TODO Auto-generated constructor stub
-
 }
 
 XbeeS1::~XbeeS1() {
@@ -63,470 +57,536 @@ int XbeeS1::strlen(const char* word){
 return word_lenght;
 }
 
-void XbeeS1::txPacket64(Xbee64addr addr, const char *payload) {
+
+
+
+
+void XbeeS1::TxRequest64(Xbee64Addr addr, const char *payload) {
 
 	int payloadsize = strlen(payload);
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 8) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 8) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize + 8) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize + 8) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x00, true);
-		txChecksum += 0x00;
+		XbeeSendByte(TX_REQUEST_64, true);
+		tx_checksum_ += TX_REQUEST_64;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 		//DESTINATION ADRESS
 		byte = addr.get_addr_sb(1);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(2);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(3);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(4);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(5);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(6);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(7);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(8);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 
 		//OPTIONS
-		xbeeSendByte(0x00, true);
-		txChecksum += 0x00;
+		XbeeSendByte(0x00, true);
+		tx_checksum_ += 0x00;
 		//RF DATA
 
 		while (*payload) {
 			byte = ((unsigned char) *payload);
-			xbeeSendByte(byte, true);
-			txChecksum += byte;
+			XbeeSendByte(byte, true);
+			tx_checksum_ += byte;
 			++payload;
 		}
 
-		txChecksum = 0xff - txChecksum;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
-void XbeeS1::ATCommand(const char first_char, const char second_char) {
+void XbeeS1::TxATCommand(const char first_char, const char second_char) {
 
 	int payloadsize = 2;
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize ) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize ) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x08, true);
-		txChecksum += 0x08;
+		XbeeSendByte(AT_COMMAND, true);
+		tx_checksum_ += AT_COMMAND;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 		//AT COMMAND
 		byte = first_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = second_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
-		txChecksum = 0xff - txChecksum;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
-void XbeeS1::ATCommand(const char first_char, const char second_char, const char* parameter) {
+void XbeeS1::TxATCommand(const char first_char, const char second_char, const char* parameter) {
 
 	int payloadsize = strlen(parameter) + 2;
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize ) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize ) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize ) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x08, true);
-		txChecksum += 0x08;
+		XbeeSendByte(AT_COMMAND, true);
+		tx_checksum_ += AT_COMMAND;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 		//AT COMMAND
 		byte = first_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = second_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		while (*parameter) {
 			byte = ((unsigned char) *parameter);
-			xbeeSendByte(byte, true);
-			txChecksum += byte;
+			XbeeSendByte(byte, true);
+			tx_checksum_ += byte;
 			++parameter;
 		}
 
-		txChecksum = 0xff - txChecksum;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
-void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char second_char) {
+void XbeeS1::TxRemoteATCommand(Xbee64Addr addr, const char first_char, const char second_char) {
 
 	int payloadsize = 2;
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x17, true);
-		txChecksum += 0x17;
+		XbeeSendByte(REMOTE_AT_REQUEST, true);
+		tx_checksum_ += REMOTE_AT_REQUEST;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 
 		//64 DESTINATION ADRESS
 		byte = addr.get_addr_sb(1);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(2);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(3);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(4);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(5);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(6);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(7);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(8);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		//16DESTINATION ADRESS
 		byte = 0xFF;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte =0xFE;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		//OPTIONS
-		xbeeSendByte(0x00, true);
-		txChecksum += 0x00;
+		XbeeSendByte(0x02, true);
+		tx_checksum_ += 0x02;
 
 		//AT COMMAND
 		byte = first_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		byte = second_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 
-		txChecksum = 0xff - txChecksum;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
-void XbeeS1::remoteATCommand(Xbee64addr addr, const char first_char, const char second_char, const char* parameter) {
+void XbeeS1::TxRemoteATCommand(Xbee64Addr addr, const char first_char, const char second_char, const char* parameter) {
 
 	int payloadsize = strlen(parameter) + 2;
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize + 10) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize + 10) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x17, true);
-		txChecksum += 0x17;
+		XbeeSendByte(REMOTE_AT_REQUEST, true);
+		tx_checksum_ += REMOTE_AT_REQUEST;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 
 		//64 DESTINATION ADRESS
 		byte = addr.get_addr_sb(1);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(2);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(3);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 	    byte = addr.get_addr_sb(4);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(5);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(6);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(7);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_addr_sb(8);
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		//16DESTINATION ADRESS
 		byte = 0xFF;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte =0xFE;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		//OPTIONS
-		xbeeSendByte(0x00, true);
-		txChecksum += 0x00;
+		XbeeSendByte(0x00, true);
+		tx_checksum_ += 0x00;
 
 		//AT COMMAND
 		byte = first_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = second_char;
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 
 		while (*parameter) {
 			byte = ((unsigned char) *parameter);
-			xbeeSendByte(byte, true);
-			txChecksum += byte;
+			XbeeSendByte(byte, true);
+			tx_checksum_ += byte;
 			++parameter;
 		}
 
 
-		txChecksum = 0xff - txChecksum;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
-void XbeeS1::txPacket(Xbee16addr addr, const char *payload) {
+void XbeeS1::TxRequest16(Xbee16Addr addr, const char *payload) {
 
 	int payloadsize = strlen(payload);
 
-		while (!txOk ) {
+		while (!tx_ok_ ) {
 
 		unsigned char byte = 0;
-		txChecksum = 0x0;
+		tx_checksum_ = 0x0;
 		//START DELIMITER
-		xbeeSendByte(START_BYTE, false);
+		XbeeSendByte(START_BYTE, false);
 		//LENGTH
-		xbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
-		xbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
+		XbeeSendByte((((3 + payloadsize + 2) >> 8) & 0xff), true);
+		XbeeSendByte(((3+ payloadsize + 2) & 0xff), true);
 		//API IDENTIFIER
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(TX_REQUEST_16, true);
+		tx_checksum_ += TX_REQUEST_16;
 		//FRAME ID
-		xbeeSendByte(0x01, true);
-		txChecksum += 0x01;
+		XbeeSendByte(0x01, true);
+		tx_checksum_ += 0x01;
 		//DESTINATION ADRESS
 		byte = addr.get_msb();
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		byte = addr.get_lsb();
-		xbeeSendByte(byte, true);
-		txChecksum += byte;
+		XbeeSendByte(byte, true);
+		tx_checksum_ += byte;
 		//OPTIONS
-		xbeeSendByte(0x00, true);
-		txChecksum += 0x00;
+		XbeeSendByte(0x00, true);
+		tx_checksum_ += 0x00;
 		//RF DATA
 
 		while (*payload) {
 			byte = ((unsigned char) *payload);
-			xbeeSendByte(byte, true);
-			txChecksum += byte;
+			XbeeSendByte(byte, true);
+			tx_checksum_ += byte;
 			++payload;
 		}
 
-		txChecksum = 0xff - txChecksum;
+		tx_checksum_ = 0xff - tx_checksum_;
 		//CHECKSUM
-		xbeeSendByte(txChecksum, true);
+		XbeeSendByte(tx_checksum_, true);
 		quaterMsElapsed(400);
 	}
-	txOk = false;
+	tx_ok_ = false;
 }
 
 
-void XbeeS1::xbeeSendByte(char byte, bool escape) {
+void XbeeS1::XbeeSendByte(char byte, bool escape) {
 
 	if (escape
 			&& (byte == START_BYTE || byte == ESCAPE || byte == XON
 					|| byte == XOFF)) {
-		su.xmit(ESCAPE);
-		su.xmit(byte ^ 0x20);
+		software_serial_.xmit(ESCAPE);
+		software_serial_.xmit(byte ^ 0x20);
 	} else {
-		su.xmit(byte);
+		software_serial_.xmit(byte);
 	}
 
 }
 
-bool XbeeS1::getTxOk(void) {
+
+bool XbeeS1::get_tx_ok(void) {
 	return false;
 }
-void XbeeS1::setTxOk(bool param) {
-
+void XbeeS1::set_tx_ok(bool param) {
 	//txOK = param;
 }
 
-bool XbeeS1::isEmpty() {
-
-	return packetBuffer.empty();
-
-}
-char  XbeeS1::getPacket() {
-
-	return packetBuffer.pop_front();
+bool XbeeS1::IsEmpty() {
+	return packet_buffer_.empty();
 }
 
-void XbeeS1::getRXPacket() {
 
-	unsigned char ch;
+void XbeeS1::GetRXPacket() {
 
 
-	while (!su.empty()) {
-		ch = su.recv();
+	 char buffer_char;
+	while (!software_serial_.empty()) {
+		buffer_char = software_serial_.recv();
 
-		if (ch == ESCAPE) {
-			isEscaped = true;
+		if (buffer_char == ESCAPE) {
+		is_escaped_ = true;
+	}		if (is_escaped_) {
+		buffer_char = buffer_char - 0x20;
+		is_escaped_ = false;
+	}
+
+
+	if (buffer_char == START_BYTE) {
+
+
+		rx_checksum_ = 0x0;
+		data_index_ = 0;
+		message_size_ = 0;
+		msb_ = 0;
+		lsb_ = 0;
+	}
+	if(data_index_ >1){
+
+		if (data_index_ == 1) {
+			msb_ = buffer_char;
+			}
+			if (data_index_ == 2) {
+				lsb_ = buffer_char;
+				message_size_ = (msb_ << 8) | lsb_;
+				message_size_ = message_size_ + 0x04;//?
+			}
+			if (data_index_ == 3) {
+
+				if(buffer_char==RX_PACKET_16){
+
+					RED_LED_TOGGLE();
+				}
+				if(buffer_char==RX_PACKET_64){
+
+					RED_LED_TOGGLE();
+				}
+				if(buffer_char==AT_COMMAND_RESPONSE){
+
+					RED_LED_TOGGLE();
+				}
+				if(buffer_char==REMOTE_AT_RESPONSE){
+
+					RED_LED_TOGGLE();
+				}
+				if(buffer_char==TX_STATUS){
+
+					RED_LED_TOGGLE();
+				}
+			}
+
+
+	data_index_++;
+	}
+}
+}
+
+/*
+void XbeeS1::GetRXPacket() {
+
+	unsigned char buffer_char;
+
+	while (!software_serial_.empty()) {
+
+		buffer_char = software_serial_.recv();
+
+		if (buffer_char == ESCAPE) {
+			is_escaped_ = true;
 		}
-		if (isEscaped) {
-			ch = ch - 0x20;
-			isEscaped = false;
+		if (is_escaped_) {
+			buffer_char = buffer_char - 0x20;
+			is_escaped_ = false;
 		}
-		if (ch == START_BYTE) {
-			rxChecksum = 0x0;
-			dataIndex = 0;
-			msgsize = 0;
-			msb = 0;
-			lsb = 0;
-			//recievedMessage_[dataIndex] = ch;
-			dataIndex++;
+		if (buffer_char == START_BYTE) {
+			rx_checksum_ = 0x0;
+			data_index_ = 0;
+			message_size_ = 0;
+			msb_ = 0;
+			lsb_ = 0;
+			data_index_++;
 		} else {
 
-			if (dataIndex == 1) {
-				msb = ch;
-				//recievedMessage_[dataIndex] = ch;
-			} else if (dataIndex == 2) {
-				lsb = ch;
-
-				msgsize = (msb << 8) | lsb;
-				msgsize = msgsize + 0x04;
+			if (data_index_ == 1) {
+				msb_ = buffer_char;
 
 				//recievedMessage_[dataIndex] = ch;
+			} else if (data_index_ == 2) {
 
-			} else if (dataIndex < msgsize - 1 && dataIndex > 2) {
+				lsb_ = buffer_char;
+
+				message_size_ = (msb_ << 8) | lsb_;
+				message_size_ = message_size_ + 0x04;//?
 
 				//recievedMessage_[dataIndex] = ch;
-				if (dataIndex == 3) {
-					rxApiFrame = ch;
+
+			} else if (data_index_ < message_size_ - 1 && data_index_ > 2) {
+
+				//recievedMessage_[dataIndex] = ch;
+				if (data_index_ == 3) {
+					rx_api_frame_ = buffer_char;
 				}
-				if (rxApiFrame != 0x89) {
+				if (rx_api_frame_ != 0x89) {
 
-					packetBuffer.push_back(ch);
+					packet_buffer_.push_back(buffer_char);
 					RED_LED_TOGGLE();
-				} else if (rxApiFrame == 0x89) {
-					if (dataIndex == 5) {
-						txStatus = ch;
+				} else if (rx_api_frame_ == 0x89) {
+					if (data_index_ == 5) {
+						tx_status_ = buffer_char;
 					}
 				}
 
-				rxChecksum = rxChecksum + ch;
+				rx_checksum_ = rx_checksum_ + buffer_char;
 
 				//} else if (dataIndex < msgsize && dataIndex > 2) {
-			} else if (dataIndex == (msgsize - 1)) {
+			} else if (data_index_ == (message_size_ - 1)) {
 
 				//recievedMessage_[dataIndex] = ch;		//ultimo char
-				rxChecksum = rxChecksum + ch;
+				rx_checksum_ = rx_checksum_ + buffer_char;
 
 				//RED_LED_TOGGLE();
 
-				if (rxChecksum == 0xFF) {
+				if (rx_checksum_ == 0xFF) {
 					//RED_LED_TOGGLE();
-					if (rxApiFrame != 0x89) {
+					if (rx_api_frame_ != 0x89) {
 						//packetBuffer.push_back(packet);
 
-					} else if (rxApiFrame == 0x89 && txStatus == 0x0) {
-						txOk = true;
+					} else if (rx_api_frame_ == 0x89 && tx_status_ == 0x0) {
+						tx_ok_ = true;
 					}
 
 					//hardUARTSendArray("Correct Checksum ", 17);
-					//interpretPackage(recievedMessage_, msgsize);
+					//interpretPackage(recievedMessage_, message_size);
 				} else {
 					//hardUARTSendArray("Incorrect Checksum ", 19);
 				}
 
 			}
 
-			dataIndex++;
+			data_index_++;
 		}
 	}
 }
+*/
 
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void XbeeS1::Timer0_A0(void) {
-	XbeeS1::getRXPacket();
+	XbeeS1::GetRXPacket();
 }
 
