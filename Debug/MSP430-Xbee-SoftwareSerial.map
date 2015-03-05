@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v4.3.1                      
 ******************************************************************************
->> Linked Thu Mar 05 02:42:10 2015
+>> Linked Thu Mar 05 11:07:07 2015
 
 OUTPUT FILE NAME:   <MSP430-Xbee-SoftwareSerial.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 0000c64e
+ENTRY POINT SYMBOL: "_c_int00"  address: 0000c678
 
 
 MEMORY CONFIGURATION
@@ -19,7 +19,7 @@ MEMORY CONFIGURATION
   INFOC                 00001040   00000040  00000000  00000040  RWIX
   INFOB                 00001080   00000040  00000000  00000040  RWIX
   INFOA                 000010c0   00000040  00000000  00000040  RWIX
-  FLASH                 0000c000   00003fe0  0000082c  000037b4  RWIX
+  FLASH                 0000c000   00003fe0  00000856  0000378a  RWIX
   INT00                 0000ffe0   00000002  00000000  00000002  RWIX
   INT01                 0000ffe2   00000002  00000000  00000002  RWIX
   INT02                 0000ffe4   00000002  00000002  00000000  RWIX
@@ -94,83 +94,83 @@ section   page    origin      length       input sections
                   000003b0    00000002     rts430_eabi.lib : boot.obj (.stack)
                   000003b2    0000004e     --HOLE--
 
-.text      0    0000c000    0000073c     
-                  0000c000    000000ca     xbee_s1.obj (.text:_ZN6XbeeS111GetRXPacketEv)
-                  0000c0ca    000000c6     main.obj (.text:main)
-                  0000c190    000000a8     rts430_eabi.lib : memory.obj (.text:malloc)
-                  0000c238    00000080                     : memory.obj (.text:free)
-                  0000c2b8    00000070     software_serial.obj (.text:_ZN14SoftwareSerial11Timer_A0_RXEv)
-                  0000c328    0000005e     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
-                  0000c386    0000005e                     : autoinit.obj (.text:_auto_init)
-                  0000c3e4    0000004e                     : dtor_list.obj (.text:__cxa_finalize)
-                  0000c432    0000004c                     : dtor_list.obj (.text:_Z11__TI_atexitPFYvPvES_S_$8)
-                  0000c47e    00000044     xbee_s1.obj (.text:_ZN6XbeeS1C1Ev)
-                  0000c4c2    00000040     timer.obj (.text:_Z9wdt_timerv)
-                  0000c502    00000040     software_serial.obj (.text:_ZN14SoftwareSerial11Timer_A1_TXEv)
-                  0000c542    0000003c     xbee_s1.obj (.text:__sti___11_xbee_s1_cpp_0d336741)
-                  0000c57e    00000038     rts430_eabi.lib : memory.obj (.text:minit)
-                  0000c5b6    0000002c     software_serial.obj (.text:_ZN14SoftwareSerialC1Ev)
-                  0000c5e2    0000002a     rts430_eabi.lib : exit.obj (.text:exit)
-                  0000c60c    00000024     software_serial.obj (.text:__sti___19_software_serial_cpp_1ac42f9a)
-                  0000c630    0000001e     timer.obj (.text:_Z19QuaterMillisElapsedi)
-                  0000c64e    0000001c     rts430_eabi.lib : boot.obj (.text:_c_int00_noargs)
-                  0000c66a    0000001a     xbee_s1.obj (.text:_ZN6XbeeS19Timer0_A0Ev)
-                  0000c684    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  0000c698    00000012                     : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  0000c6aa    00000012                     : memcpy.obj (.text:memcpy)
-                  0000c6bc    00000010                     : epilog.obj (.text)
-                  0000c6cc    0000000a     main.obj (.text:_Z6Port_1v)
-                  0000c6d6    0000000a     rts430_eabi.lib : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD0Ev)
-                  0000c6e0    0000000a                     : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD0Ev)
-                  0000c6ea    0000000a     software_serial.obj (.text:_ZN10ringbufferIcLi16EED0Ev)
-                  0000c6f4    0000000a     software_serial.obj (.text:_ZN14SoftwareSerialD0Ev)
-                  0000c6fe    0000000a     xbee_s1.obj (.text:_ZN6XbeeS1D0Ev)
-                  0000c708    0000000a     rts430_eabi.lib : delete.obj (.text:_ZdlPv)
-                  0000c712    00000006                     : isr_trap.obj (.text:__TI_ISR_TRAP)
-                  0000c718    00000006                     : dtor_list.obj (.text:__cxa_ia64_exit)
-                  0000c71e    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  0000c724    00000004                     : dtor_list.obj (.text:__cxa_atexit)
-                  0000c728    00000004                     : pre_init.obj (.text:_system_pre_init)
-                  0000c72c    00000004                     : exit.obj (.text:abort)
-                  0000c730    00000002                     : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD1Ev)
-                  0000c732    00000002                     : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD1Ev)
-                  0000c734    00000002     software_serial.obj (.text:_ZN10ringbufferIcLi16EED1Ev)
-                  0000c736    00000002     software_serial.obj (.text:_ZN14SoftwareSerialD1Ev)
-                  0000c738    00000002     xbee_s1.obj (.text:_ZN6XbeeS1D1Ev)
-                  0000c73a    00000002     rts430_eabi.lib : _lock.obj (.text:_nop)
+.text      0    0000c000    00000766     
+                  0000c000    000000f4     xbee_s1.obj (.text:_ZN6XbeeS111GetRXPacketEv)
+                  0000c0f4    000000c6     main.obj (.text:main)
+                  0000c1ba    000000a8     rts430_eabi.lib : memory.obj (.text:malloc)
+                  0000c262    00000080                     : memory.obj (.text:free)
+                  0000c2e2    00000070     software_serial.obj (.text:_ZN14SoftwareSerial11Timer_A0_RXEv)
+                  0000c352    0000005e     rts430_eabi.lib : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
+                  0000c3b0    0000005e                     : autoinit.obj (.text:_auto_init)
+                  0000c40e    0000004e                     : dtor_list.obj (.text:__cxa_finalize)
+                  0000c45c    0000004c                     : dtor_list.obj (.text:_Z11__TI_atexitPFYvPvES_S_$8)
+                  0000c4a8    00000044     xbee_s1.obj (.text:_ZN6XbeeS1C1Ev)
+                  0000c4ec    00000040     timer.obj (.text:_Z9wdt_timerv)
+                  0000c52c    00000040     software_serial.obj (.text:_ZN14SoftwareSerial11Timer_A1_TXEv)
+                  0000c56c    0000003c     xbee_s1.obj (.text:__sti___11_xbee_s1_cpp_0d336741)
+                  0000c5a8    00000038     rts430_eabi.lib : memory.obj (.text:minit)
+                  0000c5e0    0000002c     software_serial.obj (.text:_ZN14SoftwareSerialC1Ev)
+                  0000c60c    0000002a     rts430_eabi.lib : exit.obj (.text:exit)
+                  0000c636    00000024     software_serial.obj (.text:__sti___19_software_serial_cpp_1ac42f9a)
+                  0000c65a    0000001e     timer.obj (.text:_Z19QuaterMillisElapsedi)
+                  0000c678    0000001c     rts430_eabi.lib : boot.obj (.text:_c_int00_noargs)
+                  0000c694    0000001a     xbee_s1.obj (.text:_ZN6XbeeS19Timer0_A0Ev)
+                  0000c6ae    00000014     rts430_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  0000c6c2    00000012                     : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  0000c6d4    00000012                     : memcpy.obj (.text:memcpy)
+                  0000c6e6    00000010                     : epilog.obj (.text)
+                  0000c6f6    0000000a     main.obj (.text:_Z6Port_1v)
+                  0000c700    0000000a     rts430_eabi.lib : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD0Ev)
+                  0000c70a    0000000a                     : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD0Ev)
+                  0000c714    0000000a     software_serial.obj (.text:_ZN10ringbufferIcLi16EED0Ev)
+                  0000c71e    0000000a     software_serial.obj (.text:_ZN14SoftwareSerialD0Ev)
+                  0000c728    0000000a     xbee_s1.obj (.text:_ZN6XbeeS1D0Ev)
+                  0000c732    0000000a     rts430_eabi.lib : delete.obj (.text:_ZdlPv)
+                  0000c73c    00000006                     : isr_trap.obj (.text:__TI_ISR_TRAP)
+                  0000c742    00000006                     : dtor_list.obj (.text:__cxa_ia64_exit)
+                  0000c748    00000006                     : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  0000c74e    00000004                     : dtor_list.obj (.text:__cxa_atexit)
+                  0000c752    00000004                     : pre_init.obj (.text:_system_pre_init)
+                  0000c756    00000004                     : exit.obj (.text:abort)
+                  0000c75a    00000002                     : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD1Ev)
+                  0000c75c    00000002                     : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD1Ev)
+                  0000c75e    00000002     software_serial.obj (.text:_ZN10ringbufferIcLi16EED1Ev)
+                  0000c760    00000002     software_serial.obj (.text:_ZN14SoftwareSerialD1Ev)
+                  0000c762    00000002     xbee_s1.obj (.text:_ZN6XbeeS1D1Ev)
+                  0000c764    00000002     rts430_eabi.lib : _lock.obj (.text:_nop)
 
-.const     0    0000c73c    000000ca     
-                  0000c73c    00000025     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
-                  0000c761    00000001     --HOLE-- [fill = 0]
-                  0000c762    00000022                     : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
-                  0000c784    00000015     software_serial.obj (.const:.typeinfo:_ZTS10ringbufferIcLi16EE)
-                  0000c799    00000001     --HOLE-- [fill = 0]
-                  0000c79a    00000011     software_serial.obj (.const:.typeinfo:_ZTS14SoftwareSerial)
-                  0000c7ab    00000001     --HOLE-- [fill = 0]
-                  0000c7ac    0000000d     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
-                  0000c7b9    00000001     --HOLE-- [fill = 0]
-                  0000c7ba    00000008     xbee_s1.obj (.const:.typeinfo:_ZTS6XbeeS1)
-                  0000c7c2    00000008     software_serial.obj (.const:_ZTV10ringbufferIcLi16EE)
-                  0000c7ca    00000008     software_serial.obj (.const:_ZTV14SoftwareSerial)
-                  0000c7d2    00000008     xbee_s1.obj (.const:_ZTV6XbeeS1)
-                  0000c7da    00000008     rts430_eabi.lib : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
-                  0000c7e2    00000008                     : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
-                  0000c7ea    00000006                     : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
-                  0000c7f0    00000006                     : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
-                  0000c7f6    00000004     software_serial.obj (.const:.typeinfo:_ZTI10ringbufferIcLi16EE)
-                  0000c7fa    00000004     software_serial.obj (.const:.typeinfo:_ZTI14SoftwareSerial)
-                  0000c7fe    00000004     xbee_s1.obj (.const:.typeinfo:_ZTI6XbeeS1)
-                  0000c802    00000004     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
+.const     0    0000c766    000000ca     
+                  0000c766    00000025     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
+                  0000c78b    00000001     --HOLE-- [fill = 0]
+                  0000c78c    00000022                     : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
+                  0000c7ae    00000015     software_serial.obj (.const:.typeinfo:_ZTS10ringbufferIcLi16EE)
+                  0000c7c3    00000001     --HOLE-- [fill = 0]
+                  0000c7c4    00000011     software_serial.obj (.const:.typeinfo:_ZTS14SoftwareSerial)
+                  0000c7d5    00000001     --HOLE-- [fill = 0]
+                  0000c7d6    0000000d     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
+                  0000c7e3    00000001     --HOLE-- [fill = 0]
+                  0000c7e4    00000008     xbee_s1.obj (.const:.typeinfo:_ZTS6XbeeS1)
+                  0000c7ec    00000008     software_serial.obj (.const:_ZTV10ringbufferIcLi16EE)
+                  0000c7f4    00000008     software_serial.obj (.const:_ZTV14SoftwareSerial)
+                  0000c7fc    00000008     xbee_s1.obj (.const:_ZTV6XbeeS1)
+                  0000c804    00000008     rts430_eabi.lib : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
+                  0000c80c    00000008                     : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
+                  0000c814    00000006                     : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
+                  0000c81a    00000006                     : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
+                  0000c820    00000004     software_serial.obj (.const:.typeinfo:_ZTI10ringbufferIcLi16EE)
+                  0000c824    00000004     software_serial.obj (.const:.typeinfo:_ZTI14SoftwareSerial)
+                  0000c828    00000004     xbee_s1.obj (.const:.typeinfo:_ZTI6XbeeS1)
+                  0000c82c    00000004     rts430_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
 
 .init_array 
-*          0    0000c806    00000004     
-                  0000c806    00000004     <whole-program> (.init_array)
+*          0    0000c830    00000004     
+                  0000c830    00000004     <whole-program> (.init_array)
 
-.cinit     0    0000c80a    00000022     
-                  0000c80a    00000010     (.cinit..data.load) [load image]
-                  0000c81a    00000006     (__TI_handler_table)
-                  0000c820    00000004     (.cinit..bss.load) [load image, compression = zero_init]
-                  0000c824    00000008     (__TI_cinit_table)
+.cinit     0    0000c834    00000022     
+                  0000c834    00000010     (.cinit..data.load) [load image]
+                  0000c844    00000006     (__TI_handler_table)
+                  0000c84a    00000004     (.cinit..bss.load) [load image, compression = zero_init]
+                  0000c84e    00000008     (__TI_cinit_table)
 
 PORT1      0    0000ffe4    00000002     
                   0000ffe4    00000002     <whole-program> (.int02)
@@ -221,14 +221,14 @@ NMI        0    0000fffc    00000002
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 0000c824 records: 2, size/record: 4, table size: 8
-	.data: load addr=0000c80a, load size=00000010 bytes, run addr=000002a8, run size=0000000c bytes, compression=copy
-	.bss: load addr=0000c820, load size=00000004 bytes, run addr=00000200, run size=00000057 bytes, compression=zero_init
+__TI_cinit_table @ 0000c84e records: 2, size/record: 4, table size: 8
+	.data: load addr=0000c834, load size=00000010 bytes, run addr=000002a8, run size=0000000c bytes, compression=copy
+	.bss: load addr=0000c84a, load size=00000004 bytes, run addr=00000200, run size=00000057 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000c81a records: 3, size/record: 2, table size: 6
+__TI_handler_table @ 0000c844 records: 3, size/record: 2, table size: 6
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -248,7 +248,7 @@ address    name
 00000057   BCSCTL1
 00000058   BCSCTL2
 00000053   BCSCTL3
-0000c72c   C$$EXIT
+0000c756   C$$EXIT
 00000059   CACTL1
 0000005a   CACTL2
 000010fb   CALBC1_12MHZ
@@ -337,22 +337,22 @@ address    name
 0000006d   UCB0STAT
 0000006f   UCB0TXBUF
 00000120   WDTCTL
-0000c630   _Z19QuaterMillisElapsedi
-0000c6cc   _Z6Port_1v
-0000c4c2   _Z9wdt_timerv
-0000c6d6   _ZN10__cxxabiv117__class_type_infoD0Ev
-0000c730   _ZN10__cxxabiv117__class_type_infoD1Ev
-0000c6e0   _ZN10__cxxabiv120__si_class_type_infoD0Ev
-0000c732   _ZN10__cxxabiv120__si_class_type_infoD1Ev
-0000c6ea   _ZN10ringbufferIcLi16EED0Ev
-0000c734   _ZN10ringbufferIcLi16EED1Ev
-0000c2b8   _ZN14SoftwareSerial11Timer_A0_RXEv
-0000c502   _ZN14SoftwareSerial11Timer_A1_TXEv
+0000c65a   _Z19QuaterMillisElapsedi
+0000c6f6   _Z6Port_1v
+0000c4ec   _Z9wdt_timerv
+0000c700   _ZN10__cxxabiv117__class_type_infoD0Ev
+0000c75a   _ZN10__cxxabiv117__class_type_infoD1Ev
+0000c70a   _ZN10__cxxabiv120__si_class_type_infoD0Ev
+0000c75c   _ZN10__cxxabiv120__si_class_type_infoD1Ev
+0000c714   _ZN10ringbufferIcLi16EED0Ev
+0000c75e   _ZN10ringbufferIcLi16EED1Ev
+0000c2e2   _ZN14SoftwareSerial11Timer_A0_RXEv
+0000c52c   _ZN14SoftwareSerial11Timer_A1_TXEv
 00000218   _ZN14SoftwareSerial12ring_buffer_E
 00000232   _ZN14SoftwareSerial14tx_char_bufferE
-0000c5b6   _ZN14SoftwareSerialC1Ev
-0000c6f4   _ZN14SoftwareSerialD0Ev
-0000c736   _ZN14SoftwareSerialD1Ev
+0000c5e0   _ZN14SoftwareSerialC1Ev
+0000c71e   _ZN14SoftwareSerialD0Ev
+0000c760   _ZN14SoftwareSerialD1Ev
 0000024a   _ZN6XbeeS110tx_status_E
 0000c000   _ZN6XbeeS111GetRXPacketEv
 0000024b   _ZN6XbeeS111data_index_E
@@ -366,42 +366,42 @@ address    name
 00000250   _ZN6XbeeS14lsb_E
 00000251   _ZN6XbeeS14msb_E
 00000252   _ZN6XbeeS16tx_ok_E
-0000c66a   _ZN6XbeeS19Timer0_A0Ev
-0000c47e   _ZN6XbeeS1C1Ev
-0000c6fe   _ZN6XbeeS1D0Ev
-0000c738   _ZN6XbeeS1D1Ev
-0000c7f6   _ZTI10ringbufferIcLi16EE
-0000c7fa   _ZTI14SoftwareSerial
-0000c7fe   _ZTI6XbeeS1
-0000c7ea   _ZTIN10__cxxabiv117__class_type_infoE
-0000c7f0   _ZTIN10__cxxabiv120__si_class_type_infoE
-0000c802   _ZTISt9type_info
-0000c784   _ZTS10ringbufferIcLi16EE
-0000c79a   _ZTS14SoftwareSerial
-0000c7ba   _ZTS6XbeeS1
-0000c762   _ZTSN10__cxxabiv117__class_type_infoE
-0000c73c   _ZTSN10__cxxabiv120__si_class_type_infoE
-0000c7ac   _ZTSSt9type_info
-0000c7c2   _ZTV10ringbufferIcLi16EE
-0000c7ca   _ZTV14SoftwareSerial
-0000c7d2   _ZTV6XbeeS1
-0000c7da   _ZTVN10__cxxabiv117__class_type_infoE
-0000c7e2   _ZTVN10__cxxabiv120__si_class_type_infoE
-0000c708   _ZdlPv
+0000c694   _ZN6XbeeS19Timer0_A0Ev
+0000c4a8   _ZN6XbeeS1C1Ev
+0000c728   _ZN6XbeeS1D0Ev
+0000c762   _ZN6XbeeS1D1Ev
+0000c820   _ZTI10ringbufferIcLi16EE
+0000c824   _ZTI14SoftwareSerial
+0000c828   _ZTI6XbeeS1
+0000c814   _ZTIN10__cxxabiv117__class_type_infoE
+0000c81a   _ZTIN10__cxxabiv120__si_class_type_infoE
+0000c82c   _ZTISt9type_info
+0000c7ae   _ZTS10ringbufferIcLi16EE
+0000c7c4   _ZTS14SoftwareSerial
+0000c7e4   _ZTS6XbeeS1
+0000c78c   _ZTSN10__cxxabiv117__class_type_infoE
+0000c766   _ZTSN10__cxxabiv120__si_class_type_infoE
+0000c7d6   _ZTSSt9type_info
+0000c7ec   _ZTV10ringbufferIcLi16EE
+0000c7f4   _ZTV14SoftwareSerial
+0000c7fc   _ZTV6XbeeS1
+0000c804   _ZTVN10__cxxabiv117__class_type_infoE
+0000c80c   _ZTVN10__cxxabiv120__si_class_type_infoE
+0000c732   _ZdlPv
 00000400   __STACK_END
 00000050   __STACK_SIZE
 00000050   __SYSMEM_SIZE
-0000c824   __TI_CINIT_Base
-0000c82c   __TI_CINIT_Limit
-0000c81a   __TI_Handler_Table_Base
-0000c820   __TI_Handler_Table_Limit
-0000c806   __TI_INITARRAY_Base
-0000c80a   __TI_INITARRAY_Limit
-0000c712   __TI_ISR_TRAP
+0000c84e   __TI_CINIT_Base
+0000c856   __TI_CINIT_Limit
+0000c844   __TI_Handler_Table_Base
+0000c84a   __TI_Handler_Table_Limit
+0000c830   __TI_INITARRAY_Base
+0000c834   __TI_INITARRAY_Limit
+0000c73c   __TI_ISR_TRAP
 00000001   __TI_args_main
 00000236   __TI_cleanup_ptr
-0000c698   __TI_decompress_none
-0000c71e   __TI_decompress_rle24
+0000c6c2   __TI_decompress_none
+0000c748   __TI_decompress_rle24
 00000238   __TI_dtors_ptr
 00000001   __TI_exit
 0000ffe4   __TI_int02
@@ -416,43 +416,43 @@ address    name
 0000fff8   __TI_int12
 0000fffa   __TI_int13
 0000fffc   __TI_int14
-0000c684   __TI_zero_init
+0000c6ae   __TI_zero_init
 ffffffff   __binit__
 ffffffff   __c_args__
-0000c724   __cxa_atexit
-0000c3e4   __cxa_finalize
-0000c718   __cxa_ia64_exit
+0000c74e   __cxa_atexit
+0000c40e   __cxa_finalize
+0000c742   __cxa_ia64_exit
 0000023a   __dso_handle
-0000c6c8   __mspabi_func_epilog_1
-0000c6c6   __mspabi_func_epilog_2
-0000c6c4   __mspabi_func_epilog_3
-0000c6c2   __mspabi_func_epilog_4
-0000c6c0   __mspabi_func_epilog_5
-0000c6be   __mspabi_func_epilog_6
-0000c6bc   __mspabi_func_epilog_7
-0000c542   __sti___11_xbee_s1_cpp_0d336741
-0000c60c   __sti___19_software_serial_cpp_1ac42f9a
-0000c386   _auto_init
-0000c64e   _c_int00
-0000c64e   _c_int00_noargs
+0000c6f2   __mspabi_func_epilog_1
+0000c6f0   __mspabi_func_epilog_2
+0000c6ee   __mspabi_func_epilog_3
+0000c6ec   __mspabi_func_epilog_4
+0000c6ea   __mspabi_func_epilog_5
+0000c6e8   __mspabi_func_epilog_6
+0000c6e6   __mspabi_func_epilog_7
+0000c56c   __sti___11_xbee_s1_cpp_0d336741
+0000c636   __sti___19_software_serial_cpp_1ac42f9a
+0000c3b0   _auto_init
+0000c678   _c_int00
+0000c678   _c_int00_noargs
 000002a8   _lock
-0000c73a   _nop
+0000c764   _nop
 0000fffe   _reset_vector
 000003b0   _stack
 00000258   _sys_memory
-0000c728   _system_pre_init
+0000c752   _system_pre_init
 000002aa   _unlock
-0000c72c   abort
+0000c756   abort
 ffffffff   binit
 00000253   btnpress
-0000c5e2   exit
-0000c238   free
-0000c0ca   main
-0000c190   malloc
-0000c6aa   memcpy
+0000c60c   exit
+0000c262   free
+0000c0f4   main
+0000c1ba   malloc
+0000c6d4   memcpy
 0000023e   millis_counter_
 00000240   millis_cronometer_
-0000c57e   minit
+0000c5a8   minit
 0000022e   seconds_counter_
 00000254   startT
 00000255   start_cronometer_
@@ -599,77 +599,77 @@ address    name
 000010fe   CALDCO_1MHZ
 000010ff   CALBC1_1MHZ
 0000c000   _ZN6XbeeS111GetRXPacketEv
-0000c0ca   main
-0000c190   malloc
-0000c238   free
-0000c2b8   _ZN14SoftwareSerial11Timer_A0_RXEv
-0000c386   _auto_init
-0000c3e4   __cxa_finalize
-0000c47e   _ZN6XbeeS1C1Ev
-0000c4c2   _Z9wdt_timerv
-0000c502   _ZN14SoftwareSerial11Timer_A1_TXEv
-0000c542   __sti___11_xbee_s1_cpp_0d336741
-0000c57e   minit
-0000c5b6   _ZN14SoftwareSerialC1Ev
-0000c5e2   exit
-0000c60c   __sti___19_software_serial_cpp_1ac42f9a
-0000c630   _Z19QuaterMillisElapsedi
-0000c64e   _c_int00
-0000c64e   _c_int00_noargs
-0000c66a   _ZN6XbeeS19Timer0_A0Ev
-0000c684   __TI_zero_init
-0000c698   __TI_decompress_none
-0000c6aa   memcpy
-0000c6bc   __mspabi_func_epilog_7
-0000c6be   __mspabi_func_epilog_6
-0000c6c0   __mspabi_func_epilog_5
-0000c6c2   __mspabi_func_epilog_4
-0000c6c4   __mspabi_func_epilog_3
-0000c6c6   __mspabi_func_epilog_2
-0000c6c8   __mspabi_func_epilog_1
-0000c6cc   _Z6Port_1v
-0000c6d6   _ZN10__cxxabiv117__class_type_infoD0Ev
-0000c6e0   _ZN10__cxxabiv120__si_class_type_infoD0Ev
-0000c6ea   _ZN10ringbufferIcLi16EED0Ev
-0000c6f4   _ZN14SoftwareSerialD0Ev
-0000c6fe   _ZN6XbeeS1D0Ev
-0000c708   _ZdlPv
-0000c712   __TI_ISR_TRAP
-0000c718   __cxa_ia64_exit
-0000c71e   __TI_decompress_rle24
-0000c724   __cxa_atexit
-0000c728   _system_pre_init
-0000c72c   C$$EXIT
-0000c72c   abort
-0000c730   _ZN10__cxxabiv117__class_type_infoD1Ev
-0000c732   _ZN10__cxxabiv120__si_class_type_infoD1Ev
-0000c734   _ZN10ringbufferIcLi16EED1Ev
-0000c736   _ZN14SoftwareSerialD1Ev
-0000c738   _ZN6XbeeS1D1Ev
-0000c73a   _nop
-0000c73c   _ZTSN10__cxxabiv120__si_class_type_infoE
-0000c762   _ZTSN10__cxxabiv117__class_type_infoE
-0000c784   _ZTS10ringbufferIcLi16EE
-0000c79a   _ZTS14SoftwareSerial
-0000c7ac   _ZTSSt9type_info
-0000c7ba   _ZTS6XbeeS1
-0000c7c2   _ZTV10ringbufferIcLi16EE
-0000c7ca   _ZTV14SoftwareSerial
-0000c7d2   _ZTV6XbeeS1
-0000c7da   _ZTVN10__cxxabiv117__class_type_infoE
-0000c7e2   _ZTVN10__cxxabiv120__si_class_type_infoE
-0000c7ea   _ZTIN10__cxxabiv117__class_type_infoE
-0000c7f0   _ZTIN10__cxxabiv120__si_class_type_infoE
-0000c7f6   _ZTI10ringbufferIcLi16EE
-0000c7fa   _ZTI14SoftwareSerial
-0000c7fe   _ZTI6XbeeS1
-0000c802   _ZTISt9type_info
-0000c806   __TI_INITARRAY_Base
-0000c80a   __TI_INITARRAY_Limit
-0000c81a   __TI_Handler_Table_Base
-0000c820   __TI_Handler_Table_Limit
-0000c824   __TI_CINIT_Base
-0000c82c   __TI_CINIT_Limit
+0000c0f4   main
+0000c1ba   malloc
+0000c262   free
+0000c2e2   _ZN14SoftwareSerial11Timer_A0_RXEv
+0000c3b0   _auto_init
+0000c40e   __cxa_finalize
+0000c4a8   _ZN6XbeeS1C1Ev
+0000c4ec   _Z9wdt_timerv
+0000c52c   _ZN14SoftwareSerial11Timer_A1_TXEv
+0000c56c   __sti___11_xbee_s1_cpp_0d336741
+0000c5a8   minit
+0000c5e0   _ZN14SoftwareSerialC1Ev
+0000c60c   exit
+0000c636   __sti___19_software_serial_cpp_1ac42f9a
+0000c65a   _Z19QuaterMillisElapsedi
+0000c678   _c_int00
+0000c678   _c_int00_noargs
+0000c694   _ZN6XbeeS19Timer0_A0Ev
+0000c6ae   __TI_zero_init
+0000c6c2   __TI_decompress_none
+0000c6d4   memcpy
+0000c6e6   __mspabi_func_epilog_7
+0000c6e8   __mspabi_func_epilog_6
+0000c6ea   __mspabi_func_epilog_5
+0000c6ec   __mspabi_func_epilog_4
+0000c6ee   __mspabi_func_epilog_3
+0000c6f0   __mspabi_func_epilog_2
+0000c6f2   __mspabi_func_epilog_1
+0000c6f6   _Z6Port_1v
+0000c700   _ZN10__cxxabiv117__class_type_infoD0Ev
+0000c70a   _ZN10__cxxabiv120__si_class_type_infoD0Ev
+0000c714   _ZN10ringbufferIcLi16EED0Ev
+0000c71e   _ZN14SoftwareSerialD0Ev
+0000c728   _ZN6XbeeS1D0Ev
+0000c732   _ZdlPv
+0000c73c   __TI_ISR_TRAP
+0000c742   __cxa_ia64_exit
+0000c748   __TI_decompress_rle24
+0000c74e   __cxa_atexit
+0000c752   _system_pre_init
+0000c756   C$$EXIT
+0000c756   abort
+0000c75a   _ZN10__cxxabiv117__class_type_infoD1Ev
+0000c75c   _ZN10__cxxabiv120__si_class_type_infoD1Ev
+0000c75e   _ZN10ringbufferIcLi16EED1Ev
+0000c760   _ZN14SoftwareSerialD1Ev
+0000c762   _ZN6XbeeS1D1Ev
+0000c764   _nop
+0000c766   _ZTSN10__cxxabiv120__si_class_type_infoE
+0000c78c   _ZTSN10__cxxabiv117__class_type_infoE
+0000c7ae   _ZTS10ringbufferIcLi16EE
+0000c7c4   _ZTS14SoftwareSerial
+0000c7d6   _ZTSSt9type_info
+0000c7e4   _ZTS6XbeeS1
+0000c7ec   _ZTV10ringbufferIcLi16EE
+0000c7f4   _ZTV14SoftwareSerial
+0000c7fc   _ZTV6XbeeS1
+0000c804   _ZTVN10__cxxabiv117__class_type_infoE
+0000c80c   _ZTVN10__cxxabiv120__si_class_type_infoE
+0000c814   _ZTIN10__cxxabiv117__class_type_infoE
+0000c81a   _ZTIN10__cxxabiv120__si_class_type_infoE
+0000c820   _ZTI10ringbufferIcLi16EE
+0000c824   _ZTI14SoftwareSerial
+0000c828   _ZTI6XbeeS1
+0000c82c   _ZTISt9type_info
+0000c830   __TI_INITARRAY_Base
+0000c834   __TI_INITARRAY_Limit
+0000c844   __TI_Handler_Table_Base
+0000c84a   __TI_Handler_Table_Limit
+0000c84e   __TI_CINIT_Base
+0000c856   __TI_CINIT_Limit
 0000ffe4   __TI_int02
 0000ffe6   __TI_int03
 0000ffea   __TI_int05
