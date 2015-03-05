@@ -17,6 +17,15 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Code Composer Files
+/.launches
+/.settings
+/Debug
+/targetConfigs
+.cssproject
+.cproject
+*.cmd
+
 # =========================
 # Operating System Files
 # =========================
