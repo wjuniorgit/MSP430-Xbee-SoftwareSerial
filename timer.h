@@ -9,14 +9,13 @@
 #define TIMER_H_
 
 
-void secondsElapsed(int);
-void initClockTime(void);
-void initTest(void);
-void quaterMsElapsed(int);
-void startTxTimeout(int);
-int partialTxTimeout(void);
-int getMs();
-int getSec();
+void SecondsElapsed(int);
+void InitializeClockTime(void);
+void BeginTest(void);
+void QuaterMillisElapsed(int);
+void StartTxTimeout(int);
+int get_millis();
+int get_sec();
 
 
 #endif /* TIMER_H_ */

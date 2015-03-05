@@ -8,8 +8,6 @@
 #ifndef RINGBUFFER_H_
 #define RINGBUFFER_H_
 
-//#include "PacketInfo.h"
-
 /**
  * ringbuffer - a template based interrupt safe circular buffer structure with functions
  */
@@ -28,24 +26,13 @@ private:
 	int tail;
 	T buffer[BUFFERSIZE];
 
-	// Non-copyable, non-assignable.
-	//ringbuffer(ringbuffer&);
-	//ringbuffer& operator=(const ringbuffer&);
-
 
 };
 
 template<typename T, int BUFFERSIZE>
 ringbuffer<T,BUFFERSIZE>::ringbuffer() {
-	/*
-	head = 0;
-	tail = 0;
-	unsigned char i = BUFFERSIZE;
-	for (i = BUFFERSIZE; i > 0; i--) {
-		buffer[i - 1] = 0;
-	}
-	// TODO Auto-generated constructor stub
-	*/
+
+
 	clear_buffer();
 }
 
@@ -110,7 +97,6 @@ T ringbuffer<T,BUFFERSIZE>::pop_front() {
 	        if(tail==BUFFERSIZE){
 	        	tail=0;
 	        }
-	       // tail = (unsigned int)(tail + 1) % BUFFERSIZE;
 	    }
 
 	    _enable_interrupts();  // ok .. let everyone at them
@@ -118,7 +104,6 @@ T ringbuffer<T,BUFFERSIZE>::pop_front() {
 	    return c;
 
 }
-
 
 
 #endif /* RINGBUFFER_H_ */

@@ -25,8 +25,16 @@
 #define GREEN_LED_OFF()     P1OUT &= ~GREEN_LED
 #define GREEN_LED_TOGGLE()  P1OUT ^= GREEN_LED
 
-void initPins(void);
+inline void initPins(void){
+	P1DIR = GREEN_LED | RED_LED;
 
+	//pushbtn
+	P1SEL &= ~BUTTON_S2;
+	P1DIR &= ~BUTTON_S2;
+	P1REN |= BUTTON_S2;
+	P1IE |= BUTTON_S2;
+	P1IFG &= ~BUTTON_S2;
+}
 
 
 #endif /* PINS_H_ */

@@ -1,1 +1,1 @@
-"./timer.obj" "./softUart.obj" "./pins.obj" "./main.obj" "./XbeeS1.obj" "../lnk_msp430g2553.cmd" -l"libc.a" 
+"./xbee_s1.obj" "./timer.obj" "./software_serial.obj" "./main.obj" "../lnk_msp430g2553.cmd" -l"libc.a" 

@@ -8,123 +8,112 @@
 #include "msp430g2553.h"
 #include "timer.h"
 #include "pins.h"
-#include "defines.h"
 
-volatile int msCounter;
-volatile int msCronometer;
-volatile long secCounter;
-volatile int startCronometer; //BOOL
-volatile bool starttxcronometer;
-volatile int txcronometer;
-volatile int txtimeout;
 
-void initClockTime() {
+volatile int millis_counter_;
+volatile int millis_cronometer_;
+volatile long seconds_counter_;
+volatile bool start_cronometer_; //BOOL
+volatile bool start_tx_cronometer_;
+volatile int tx_cronometer_;
+volatile int tx_timeout_;
 
-	msCounter = 0;
-	secCounter = 0;
-	msCronometer = 0;
-	startCronometer = FALSE;
-	starttxcronometer = false;
+void InitializeClockTime() {
+
+	millis_counter_ = 0;
+	seconds_counter_ = 0;
+	millis_cronometer_ = 0;
+	start_cronometer_ = false;
+	start_tx_cronometer_ = false;
 
 	WDTCTL = WDT_MDLY_0_5;              // WDT as interval timer (period 8 ms)
 	IE1 |= WDTIE;
 
 }
 
-void startTxTimeout(int timeout) {
-	txcronometer = 0;
-	starttxcronometer = true;
-	txtimeout = timeout *16;
-}
-int partialTxTimeout() {
-	return txcronometer/16;
+void StartTxTimeout(int timeout) {
+	tx_cronometer_ = 0;
+	start_tx_cronometer_ = true;
+	tx_timeout_ = timeout *16;
 }
 
-void secondsElapsed(int interval) {
-	/*
-	 int startTime = secCounter;
-	 int presentTime = 0;
 
-	 while (presentTime - startTime < interval) {
+void SecondsElapsed(int interval) {
 
-	 presentTime = secCounter;
-	 }*/
 
-	msCronometer = 0;
+	millis_cronometer_ = 0;
 	int presentTime = 0;
 
 	//activate cronometer
-	startCronometer = TRUE;              //BOOL
+	start_cronometer_ = true;              //BOOL
 	int intervalEnd = 32000 * interval;
 
 	while (presentTime < intervalEnd) {
 
-		presentTime = msCronometer;
+		presentTime = millis_cronometer_;
 	}
 
-	//de-activate cronometer
-	startCronometer = FALSE;              //BOOL
-	msCronometer = 0;
-
+	start_cronometer_ = false;              //BOOL
+	millis_cronometer_ = 0;
 }
 
-void quaterMsElapsed(int interval) {
+void QuaterMillisElapsed(int interval) {
 
-	msCronometer = 0;
+	millis_cronometer_ = 0;
 	int presentTime = 0;
 
 	//activate cronometer
-	startCronometer = TRUE;              //BOOL
+	start_cronometer_ = true;              //BOOL
 	int intervalEnd = 8 * interval;
 
 	while (presentTime < intervalEnd) {
 
-		presentTime = msCronometer;
+		presentTime = millis_cronometer_;
 	}
 
 	//de-activate cronometer
-	startCronometer = FALSE;              //BOOL
-	msCronometer = 0;
+	start_cronometer_ = false;              //BOOL
+	millis_cronometer_ = 0;
 
 }
 
-int getMs() {
+int get_millis() {
 
 	int ms;
-	ms = msCounter / 16;
+	ms = millis_counter_ / 16;
 	return ms;
 
 }
 
-int getSec() {
+int get_sec() {
 
-	return secCounter;
+	return seconds_counter_;
 }
 
-void initTest(){
-	secCounter = 0;
-	msCounter = 0;
+void BeginTest(){
+	seconds_counter_ = 0;
+	millis_counter_ = 0;
 }
 
 #pragma vector=WDT_VECTOR
 __interrupt void wdt_timer(void) {
 
-	msCounter = msCounter + 1;
+	millis_counter_ = millis_counter_ + 1;
 
-	if (msCounter == 32000) {
+	if (millis_counter_ == 32000) {
 		GREEN_LED_TOGGLE();
-		secCounter = secCounter + 1;
-		msCounter = 0;
+		seconds_counter_ = seconds_counter_ + 1;
+		millis_counter_ = 0;
 	}
 
-	if (startCronometer == TRUE) {
-		msCronometer = msCronometer + 1;
+	if (start_cronometer_ == true) {
+		millis_cronometer_ = millis_cronometer_ + 1;
 	}
 
-	if (starttxcronometer) {
-		txcronometer = txcronometer + 1;
-		if (txcronometer > txtimeout) {
-			starttxcronometer = false;
+	if (start_tx_cronometer_) {
+		tx_cronometer_ = tx_cronometer_ + 1;
+		if (tx_cronometer_ > tx_timeout_) {
+			start_tx_cronometer_ = false;
 		}
 	}
 

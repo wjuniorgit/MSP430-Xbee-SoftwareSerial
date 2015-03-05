@@ -1,8 +1,7 @@
 #include "msp430g2553.h"
-#include "globals.h"
 #include "timer.h"
 #include "pins.h"
-#include "XbeeS1.h"
+#include "xbee_s1.h"
 
 #define BUTTON BIT3
 
@@ -30,7 +29,7 @@ int main(void) {
 	BCSCTL1 = CALBC1_16MHZ;                    // Set DCO
 	DCOCTL = CALBC1_16MHZ;
 
-	initClockTime();
+	InitializeClockTime();
 	initPins();
 
 	//endbtn
@@ -57,11 +56,11 @@ int main(void) {
 
 			//xbee.txPacket(adr, teste, 150, strlen(teste));
 			//xbee.txPacket(adr, teste);
-			xbee.TxRequest64(adr64, "teste");
+			//xbee.TxRequest64(adr64, "teste");
 			//xbee.TxRemoteATCommand(adr64,'C','H');
 
 			counter++;
-			quaterMsElapsed(100);
+			QuaterMillisElapsed(100);
 
 			//RED_LED_TOGGLE();
 		}else{
@@ -85,7 +84,7 @@ int main(void) {
 			startTest();
 
 
-			secondsElapsed(1);
+			SecondsElapsed(1);
 			btnpress = 0;
 		}
 
@@ -98,7 +97,7 @@ int main(void) {
 
 void startTest() {
 	startT = true;
-	initTest();
+	BeginTest();
 
 }
 
